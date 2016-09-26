@@ -20,7 +20,6 @@ import org.opencb.cellbase.core.client.CellBaseClient;
 import org.opencb.cellbase.core.common.GenomeSequenceFeature;
 import org.opencb.datastore.core.QueryResponse;
 import org.opencb.datastore.core.QueryResult;
-import org.opencb.opencga.lib.common.Config;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
@@ -43,16 +42,11 @@ public class CellbaseWSClient {
     private final String cellbaseRestURL;
     private final String cellbaseRestVersion;
 
-
-    public CellbaseWSClient (String species) throws URISyntaxException {
-        this(species, (String) Config.getStorageProperties().get("CELLBASE.REST.URL"), (String) Config.getStorageProperties().get("CELLBASE.VERSION"));
-    }
-
     public CellbaseWSClient (String species, String cellbaseRestURL, String cellbaseRestVersion) throws URISyntaxException {
-        this.species = species;
+        this.species = species.split("_")[0];
         this.cellbaseRestURL = cellbaseRestURL;
         this.cellbaseRestVersion = cellbaseRestVersion;
-        this.cellbaseClient = getClient(species);
+        this.cellbaseClient = getClient(this.species);
     }
 
     private CellBaseClient getClient(String species) throws URISyntaxException {
